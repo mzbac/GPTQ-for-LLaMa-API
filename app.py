@@ -6,7 +6,7 @@ from inference_utils import load_quant, _SentinelTokenStoppingCriteria
 DEV = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
 
 MODEL_NAME = './models/TheBloke/stable-vicuna-13B-GPTQ' # Update to whichever GPTQ model you want to load
-MODEL_PATH = './models/TheBloke/stable-vicuna-13B-GPTQ/stable-vicuna-13B-GPTQ-4bit.compat.no-act-order.safetensors' # Update to whichever model weight you want to load and save it
+MODEL_PATH = './models/TheBloke/stable-vicuna-13B-GPTQ/stable-vicuna-13B-GPTQ-4bit.compat.no-act-order.safetensors' # Update the model weight that you want to load for inference.
 
 class SingletonModelTokenizer:
     _instance = None
