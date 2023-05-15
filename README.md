@@ -82,6 +82,15 @@ Here's an example of a response:
 }
 ```
 
+## Acknowledgements
+
+This project has benefited greatly from the open-source community. In particular, I'd like to acknowledge the [Text-Generation-WebUI](https://github.com/oobabooga/text-generation-webui) repository by [oobabooga](https://github.com/oobabooga). 
+
+The implementation of the Stream API and the handling of stopping strings in the project are directly inspired by and adapted from the aforementioned repository. The clear and comprehensive structure of the repository provided valuable guidance for this project development.
+
+I appreciate the efforts of all open-source contributors and maintainers and grateful to [oobabooga](https://github.com/oobabooga) for making their work available to the community.
+
+
 
 
 
