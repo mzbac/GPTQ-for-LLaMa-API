@@ -1,6 +1,6 @@
 # GPTQ-for-LLaMa-API
 
-Thanks to the awesome repository from qwopqwop200 on GitHub (https://github.com/qwopqwop200/GPTQ-for-LLaMa), we are now able to run large LLM models on customer-grade GPUs. However, the original tool only provided a CLI-like inference. In this repository, it uses qwopqwop200's GPTQ-for-LLaMa implementation and serves the generated text via a simple Flask API.
+Thanks to the awesome repository from qwopqwop200 on GitHub (https://github.com/qwopqwop200/GPTQ-for-LLaMa), we are now able to run large LLM models on consumer-grade GPUs. However, the original tool only provided a CLI-like inference. In this repository, it uses qwopqwop200's GPTQ-for-LLaMa implementation and serves the generated text via a simple Flask API.
 
 ## Hardware Requirements
 An NVIDIA GPU with CUDA support is required for running the model. Please ensure that you have the correct NVIDIA drivers installed on your system and that CUDA is correctly set up. For details on the memory requirement of the GPU, please refer to https://github.com/qwopqwop200/GPTQ-for-LLaMa#result.
