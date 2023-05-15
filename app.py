@@ -33,7 +33,7 @@ def generate_text():
     text = data.get('text')
     min_length = data.get('min_length', 0)
     max_length = data.get('max_length', 50)
-    top_p = data.get('top_p', 40)
+    top_p = data.get('top_p', 0.95)
     temperature = data.get('temperature', 0.6)
     stopping_strings = data.get('stopping_strings', [])
 
