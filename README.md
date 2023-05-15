@@ -54,4 +54,34 @@ curl -X POST -H "Content-Type: application/json" -d '{"text": "Once upon a time"
 ```
 The response will be a JSON object with the key generated_text, which contains the generated text.
 
+3. Running the stream api
+To start the WebSocket server, run the stream_api.py script:
+```
+python stream_api.py
+```
+This will start a WebSocket server that listens for incoming connections on port 5005.
+
+Note: You can adjust the configuration of the server by modifying the stream_api.py script. This includes changing the port the server listens on, the path to the model files, and the parameters for the text generation.
+
+4. Running the Client Script
+```
+python stream_api_client_example.py
+```
+
+Once the server is running, you can connect to it using a WebSocket client. Send your prompts as text through the WebSocket connection.
+The server will return a stream of responses. Each response is a JSON object that includes the event type (either 'text_stream' or 'stream_end'), a message number, and the text generated so far (for 'text_stream' events).
+Here's an example of a response:
+
+```
+{
+    'event': 'text_stream',
+    'message_num': 0,
+    'text': 'This is the start of the generated text...'
+}
+```
+
+
+
+
+
 

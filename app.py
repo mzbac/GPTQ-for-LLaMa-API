@@ -39,7 +39,7 @@ def generate_text():
 
     input_ids = tokenizer.encode(text, return_tensors="pt").to(DEV)
 
-    # hanlde stopping strings
+    # handle stopping strings
     stopping_criteria_list = StoppingCriteriaList()
     if len(stopping_strings)>0:
         sentinel_token_ids = [tokenizer.encode(
