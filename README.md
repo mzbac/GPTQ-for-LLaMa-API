@@ -10,6 +10,8 @@ An NVIDIA GPU with CUDA support is required for running the model. Please ensure
 ```bash
 conda create -n GPTQ python=3.10.9
 conda activate GPTQ
+conda install pytorch torchvision torchaudio pytorch-cuda=11.7 -c pytorch -c nvidia
+
 git clone git@github.com:mzbac/GPTQ-for-LLaMa-API.git
 cd GPTQ-for-LLaMa-API
 pip install -r requirements.txt
