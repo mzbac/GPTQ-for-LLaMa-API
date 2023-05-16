@@ -20,7 +20,7 @@ pip install -r requirements.txt
 
 Run the Python script to download the model from Hugging Face. For example:
 ```
-python download.py TheBloke/stable-vicuna-13B-GPTQ
+python download.py mzbac/stable-vicuna-13B-GPTQ
 ```
 
 ## Selecting a GPU
