@@ -55,6 +55,7 @@ curl -X POST -H "Content-Type: application/json" -d '{"text": "Once upon a time"
 The response will be a JSON object with the key generated_text, which contains the generated text.
 
 3. Running the stream api
+
 To start the WebSocket server, run the stream_api.py script:
 ```
 python stream_api.py
@@ -64,6 +65,7 @@ This will start a WebSocket server that listens for incoming connections on port
 Note: You can adjust the configuration of the server by modifying the stream_api.py script. This includes changing the port the server listens on, the path to the model files, and the parameters for the text generation.
 
 4. Running the Client Script
+
 ```
 python stream_api_client_example.py
 ```
@@ -79,6 +81,15 @@ Here's an example of a response:
     'text': 'This is the start of the generated text...'
 }
 ```
+
+## Acknowledgements
+
+This project has benefited greatly from the open-source community. In particular, I'd like to acknowledge the [Text-Generation-WebUI](https://github.com/oobabooga/text-generation-webui) repository by [oobabooga](https://github.com/oobabooga). 
+
+The implementation of the Stream API and the handling of stopping strings in the project are directly inspired by and adapted from the aforementioned repository. The clear and comprehensive structure of the repository provided valuable guidance for this project development.
+
+I appreciate the efforts of all open-source contributors and maintainers and grateful to [oobabooga](https://github.com/oobabooga) for making their work available to the community.
+
 
 
 
