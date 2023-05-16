@@ -1,4 +1,5 @@
 import json
+import ssl
 from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
 from threading import Thread
 import logging
@@ -10,12 +11,13 @@ from inference_utils import load_quant, _SentinelTokenStoppingCriteria
 DEV = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
 
 # Update to whichever GPTQ model you want to load
-MODEL_NAME = './models/mzbac/stable-vicuna-13B-GPTQ'
+MODEL_NAME = './models/TheBloke/wizard-vicuna-13B-GPTQ'
 # Update the model weight that you want to load for inference.
-MODEL_PATH = './models/mzbac/stable-vicuna-13B-GPTQ/stable-vicuna-13B-GPTQ-4bit.compat.no-act-order.safetensors'
+MODEL_PATH = './models/TheBloke/wizard-vicuna-13B-GPTQ/wizard-vicuna-13B-GPTQ-4bit.compat.no-act-order.safetensors'
 
 # Setup logging
 logging.basicConfig(level=logging.INFO)
+
 
 class SingletonModelTokenizer:
     _instance = None
@@ -33,7 +35,38 @@ singleton = SingletonModelTokenizer()
 model = singleton.model
 tokenizer = singleton.tokenizer
 
+
 class GenerateHandler:
+    @staticmethod
+    def extract_response(response_text, prompt):
+        # Remove the prompt from the response_text
+        response_text = response_text.replace(prompt, '')
+
+        # Define identifiers
+        assistant_identifier = '### Assistant:'
+        human_identifier = ['### Human:', '### Human']
+
+        # Split the text by line breaks
+        lines = response_text.split('\n')
+
+        # Initialize an empty list for the processed lines
+        processed_lines = []
+
+        # Iterate over each line
+        for line in lines:
+            # If the line starts with the assistant identifier, remove it
+            if line.startswith(assistant_identifier):
+                line = line[len(assistant_identifier):].strip()
+            # If the line starts with a human identifier, skip it
+            elif any(line.startswith(identifier) for identifier in human_identifier):
+                continue
+
+            # Append the processed line to the list
+            processed_lines.append(line)
+
+        # Join the processed lines back together and return the result
+        return '\n'.join(processed_lines)
+
     @staticmethod
     def handle_request(handler, body):
         handler.send_response(200)
@@ -78,14 +111,17 @@ class GenerateHandler:
                 stopping_criteria=stopping_criteria_list,
             )
 
-        generated_text = tokenizer.decode([el.item() for el in generated_ids[0]])
+        generated_text = tokenizer.decode(
+            [el.item() for el in generated_ids[0]])
 
         # Remove the BOS token from the generated text
         generated_text = generated_text.replace(tokenizer.bos_token, "")
         # Remove the EOS token from the generated text
         generated_text = generated_text.replace(tokenizer.eos_token, "")
-        response = json.dumps({'results': [{'text': generated_text.strip()}]})
+        response = json.dumps(
+            {'results': [{'text': GenerateHandler.extract_response(generated_text.strip(), text)}]})
         handler.wfile.write(response.encode('utf-8'))
+
 
 class Handler(BaseHTTPRequestHandler):
     def do_POST(self):
@@ -97,14 +133,22 @@ class Handler(BaseHTTPRequestHandler):
             self.send_error(404)
 
 
-def _run_server(port: int, share: bool=False):
+def _run_server(port: int, share: bool = False):
     address = '0.0.0.0'
     server = ThreadingHTTPServer((address, port), Handler)
-    logging.info('Server is running on http://{}:{}'.format(address, port)) 
+
+    sslctx = ssl.SSLContext(ssl.PROTOCOL_TLS_SERVER)
+    sslctx.load_cert_chain(certfile='cert.pem', keyfile="key.pem")
+    server.socket = sslctx.wrap_socket(server.socket, server_side=True)
+
+    # Log server start
+    logging.info('Server is running on http://{}:{}'.format(address, port))
     server.serve_forever()
 
+
 def start_server(port: int, share: bool = False):
-    Thread(target=_run_server, args = [port, share]).start()
-    
+    Thread(target=_run_server, args=[port, share]).start()
+
+
 if __name__ == '__main__':
     start_server(5000)
