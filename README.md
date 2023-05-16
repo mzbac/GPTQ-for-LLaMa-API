@@ -33,32 +33,44 @@ export CUDA_VISIBLE_DEVICES=0
 ```
 
 ## Usage
-1. Update the model name and model weight path in app.py and run.
+1. Blocking api, update the model name and model weight path in blocking_api.py and run.
 
 ```
-python app.py
+python blocking_api.py
 ```
 The server will start on localhost port 5000.
 
-2. To generate text, send a POST request to the /generate endpoint. The request body should be a JSON object with the following keys:
+2. To generate text, send a POST request to the /api/v1/generate endpoint. The request body should be a JSON object with the following keys:
 
-- text: The input text (required).
+- prompt: The input prompt (required).
 - min_length: The minimum length of the sequence to be generated (optional, default is 0).
 - max_length: The maximum length of the sequence to be generated (optional, default is 50).
-- top_p: The nucleus sampling probability (optional, default is 40).
+- top_p: The nucleus sampling probability (optional, default is 0.95).
 - temperature: The temperature for sampling (optional, default is 0.6).
 For example, you can use curl to send a request:
 
 ```bash
-curl -X POST -H "Content-Type: application/json" -d '{"text": "Once upon a time"}' http://localhost:5000/generate
+curl -X POST http://localhost:5000/api/v1/generate \
+     -H "Content-Type: application/json" \
+     -d '{"prompt": "Once upon a time", "max_length": 100, "temperature": 0.7}'
 ```
-The response will be a JSON object with the key generated_text, which contains the generated text.
+The response will be a JSON object with the key "results", which contains the generated texts.
 
-3. Running the stream api
-
-To start the WebSocket server, run the stream_api.py script:
+```json
+{
+    "results": [
+        {
+            "text": "Hello world! It's a pleasure to meet you. How can I assist you today?"
+        }
+    ]
+}
 ```
-python stream_api.py
+
+3. Running the streaming api
+
+To start the WebSocket server, run the streaming_api.py script:
+```
+python streaming_api.py
 ```
 This will start a WebSocket server that listens for incoming connections on port 5005.
 
@@ -67,7 +79,7 @@ Note: You can adjust the configuration of the server by modifying the stream_api
 4. Running the Client Script
 
 ```
-python stream_api_client_example.py
+python streaming_api_client_example.py
 ```
 
 Once the server is running, you can connect to it using a WebSocket client. Send your prompts as text through the WebSocket connection.
