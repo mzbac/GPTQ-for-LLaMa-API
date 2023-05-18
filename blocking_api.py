@@ -11,9 +11,9 @@ from inference_utils import load_quant, _SentinelTokenStoppingCriteria
 DEV = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
 
 # Update to whichever GPTQ model you want to load
-MODEL_NAME = './models/TheBloke/wizard-vicuna-13B-GPTQ'
+MODEL_NAME = './models/TheBloke/wizard-mega-13B-GPTQ'
 # Update the model weight that you want to load for inference.
-MODEL_PATH = './models/TheBloke/wizard-vicuna-13B-GPTQ/wizard-vicuna-13B-GPTQ-4bit.compat.no-act-order.safetensors'
+MODEL_PATH = './models/TheBloke/wizard-mega-13B-GPTQ/wizard-mega-13B-GPTQ-4bit-128g.no-act.order.safetensors'
 
 # Setup logging
 logging.basicConfig(level=logging.INFO)
@@ -43,8 +43,8 @@ class GenerateHandler:
         response_text = response_text.replace(prompt, '')
 
         # Define identifiers
-        assistant_identifier = '### Assistant:'
-        human_identifier = ['### Human:', '### Human']
+        output_identifier = 'Output= '
+        input_identifier = ['Text=']
 
         # Split the text by line breaks
         lines = response_text.split('\n')
@@ -55,10 +55,10 @@ class GenerateHandler:
         # Iterate over each line
         for line in lines:
             # If the line starts with the assistant identifier, remove it
-            if line.startswith(assistant_identifier):
-                line = line[len(assistant_identifier):].strip()
+            if line.startswith(output_identifier):
+                line = line[len(output_identifier):].strip()
             # If the line starts with a human identifier, skip it
-            elif any(line.startswith(identifier) for identifier in human_identifier):
+            elif any(line.startswith(identifier) for identifier in input_identifier):
                 continue
 
             # Append the processed line to the list
