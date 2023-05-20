@@ -89,14 +89,15 @@ async def _handle_connection(websocket, path):
         with Iteratorize(generate_with_callback, generate_params, callback=None) as generator:
             for output in generator:
                 # Decode the entire generated text so far
-                generated_text = tokenizer.decode(output.cpu())
+                generated_text = tokenizer.decode(
+                    output.cpu(), skip_special_tokens=True)
                 # Only send the new part of the text
                 to_send = generated_text[skip_index:]
                 # remove bos token
                 if not skip_index:
                     to_send = to_send.replace(tokenizer.bos_token, "")
                     to_send = to_send.strip()
-                    
+
                 await websocket.send(json.dumps({
                     'event': 'text_stream',
                     'message_num': message_num,
